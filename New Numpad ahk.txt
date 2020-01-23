@@ -1,0 +1,22 @@
+;----nth-Numpad----
+;#if (getKeyState("F12", "P"))                           ; If this keystroke was intercepted from the 2nd-keyboard (and now F12 is pressed).
+;F12::return
+;Numpad0::                                               ; Standard input, hotkey use of Numpad0 and Numpad00 dealt with above.
+;NumpadDot::
+;NumpadEnter::
+;Numpad1::
+;Numpad2::
+;Numpad3::
+;Numpad4::
+;Numpad5::
+;Numpad6::
+;Numpad7::
+;Numpad8::
+;Numpad9::
+;NumpadSub::
+;NumpadAdd::
+;NumLock::
+;NumpadDiv::
+;NumpadMult::
+;SC00E::                                                 ; NumpadBackspace.
+;#if                                                     ; Done with F12.
