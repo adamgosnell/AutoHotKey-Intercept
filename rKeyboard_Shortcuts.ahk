@@ -1,37 +1,52 @@
-﻿;-----------------------
+;-----------------------
 ;                       
 ;    On script start    
 ;                       
 ;-----------------------
 
-;----AHK Recommended Settings----
-#NoEnv                                                  ; For performance and compatibility with future AutoHotkey releases.
-SetWorkingDir %A_ScriptDir%                             ; Ensures a consistent starting directory.
+	;----AHK Recommended Settings----
+		#NoEnv                                                  ; For performance and compatibility with future AutoHotkey releases.
+		;SendMode Input                                         ; For new scripts due to its superior speed and reliability.
+		SetWorkingDir %A_ScriptDir%                             ; Ensures a consistent starting directory.
 
-;----Settings----
-#SingleInstance force                                   ; On script's reload, kill the first instance.
-SetNumLockState, AlwaysOn                               ; NumLock always on.
-#Hotstring, SI                                          ; Send hotstrings using "SendInput," faster.
-#InstallKeybdHook
+	;----Settings----
+		#SingleInstance force                                   ; On script's reload, kill the first instance.
+		SetNumLockState, AlwaysOn                               ; NumLock always on.
+		#Hotstring, SI                                          ; Send hotstrings using "SendInput," faster.
 
-;----Standard Variables----
-FormatTime, CurrentTime,, Time
-FormatTime, CurrentShortDate,, MM/dd/yyyy
-FormatTime, CurrentLongDate,, LongDate
+	;----Intercept----                                     		; Intercept distinguishes inputs from 1st- and 2nd-keyboards.
+		Process, Close, intercept.exe                           ; It intercepts (mostly 2nd-keyboard) hotkeys and replaces them with F12+hotkey.
+		Sleep, 200
+		SetWorkingDir D:\Hotkeys_and_Keyboards\intercept\intercept\
+		Run D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe /apply
+		WinWait D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe
+		WinHide D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe
 
-;----Intercept----                                      ; Intercept distinguishes inputs from 1st- and 2nd-keyboards.
-Process, Close, intercept.exe                           ; It intercepts (mostly 2nd-keyboard) hotkeys and replaces them with F12+hotkey. 
-Sleep, 200
-SetWorkingDir D:\Hotkeys_and_Keyboards\intercept\intercept\
-Run D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe /apply
-WinWait D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe
-WinHide D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe
+	;----AHK Startup Image----                              	; AHK logo on script start, FYI
+		SplashImage, D:\Hotkeys_and_Keyboards\AutoHotkeyLogoSplash.jpg, B
+		Sleep, 800
+		SplashImage, Off
+		Return
 
-;----AHK Startup Image----                              ; AHK logo on script start, FYI
-SplashImage, D:\Hotkeys_and_Keyboards\AutoHotkeyLogoSplash.jpg, B
-Sleep, 800
-SplashImage, Off
-return
+	;----Test transparent splash----
+		SplashImageGUI(Picture, X, Y, Duration, Transparent = false)
+		{
+		Gui, XPT99:Margin , 0, 0
+		Gui, XPT99:Add, Picture,, %Picture%
+		Gui, XPT99:Color, ECE9D8
+		Gui, XPT99:+LastFound -Caption +AlwaysOnTop +ToolWindow -Border
+		If Transparent
+		{
+			Winset, TransColor, ECE9D8
+		}
+		Gui, XPT99:Show, x%X% y%Y% NoActivate
+		SetTimer, DestroySplashGUI, -%Duration%
+		return
+
+		DestroySplashGUI:
+		Gui, XPT99:Destroy
+		return
+		}
 
 ;------------------
 ;                  
@@ -39,36 +54,127 @@ return
 ;                  
 ;------------------
 
-;----Everyday Use----
-::.h::Hi!{Enter}{Enter}{Enter}I hope you're doing well. 
-::.b::Hi{!} Just making sure you saw this. 
-::.b2::Hey{!} What's the progress on this? 
-::.b3::I've reached out a couple times, but haven't heard back yet. Would it make sense to get back to you on this next week? 
-::.tys::Thank you, sir{!} 
-::.clo::clockout
-::.p::                                                  ; my phone number, (XXX) XXX - XXXX 
-::.comment::[-----------------------------------------------------A] ; this is an indicator I use for spacing the comments the way I like them. 
-::.mp::Morning Prayer
-::.ep::Evening Prayer
-:*:--::—                                                ; replaces double hyphens with an em-dash
+	;----Everyday Use----
+		::.ad::[my address]
+		::.h::Hi!{Enter}{Enter}{Enter}I hope you're doing well. 
+		::.b::Hi{!} Just making sure you saw this. 
+		::.b2::Hey{!} Circling back around on this. 
+		::.b3::Hey{!} Just wanted to get this back on your radar.
+		::.b4::I've reached out a couple times, but haven't heard back yet. Would it make sense to get back to you on this in a few weeks? 
+		::.tys::Thank you, sir{!} 
+		::.clo::clockout
+		::.p::[my phone number]
+		::.comment::[-----------------------------------------------------A]
+		::.mp::Morning Prayer
+		::.ep::Evening Prayer
+		::.em::[my email]
+		::.zss::
+		:o:.s::asg{+}                                           ; I don't use this much, because I have a gmail sig, but I use it in my digital file titles
+		:o:.(s::{(}asg{+}{)}
+		:?*:--::—
+		::.trip::Trip ____, Don't Schedule Anything
+		::.tript::Trip Tomorrow, Don't Schedule Anything
+		::.tripy::Trip Yesterday, Don't Schedule Anything
+		::.ex::Exercise (until 12:35p), Lunch                   ; I use this in my Daily Log.
+		::.start::
+			FormatTime, CurrentShortDate,, MM/dd/yyyy
+			Send, %CurrentShortDate%{Enter}{Enter}
+			Send, {#} Getting Organized{Enter}_Survey:_{Enter}Gather everything in one source{Enter}Is it actionable? (trash, someday, reference){Enter}What's the next action? (project plans){Enter}Will it take less than two minutes (delegate, defer to cal, defer to to-do){Enter}_Prioritize To-Do:_{Enter}Reply to emails in 24 hours.{Enter}What projects will make me money?{Enter}What will get worse if I don't do it today?{Enter}{Enter}{#} To-Do{Enter}
+			Return
+		:o:1:1::One-on-One
+		::.th::Thanks for your email.
+		::.thk::Thanks for your kind email.
+		::.=::Blessings,{Enter}
+		::.may::May the souls of all the faithful departed, through the mercies of God, rest in peace.
+		::.formal::
+			FormatTime, CurrentLongDate,,MMMM d{,} yyyy
+			Send, %CurrentLongDate%{Enter}{Enter}Adam Salter Gosnell{Enter}Executive Director{Enter}Gosnell Projects{Enter}[my email address]{Enter}[my phone number]{Enter}{Enter}
+			Send, To{Enter}Position{Enter}Organization{Enter}Email{Enter}Phone{Enter}{Enter}TITLE
+			Return
+		::.memo::
+			FormatTime, CurrentLongDate,,MMMM d{,} yyyy
+			Send To{:}{Tab}{Tab}NN{Enter}{Tab}{Tab}POS{,} ORG{Enter}From{:}{Tab}{Tab}Adam Salter Gosnell{Enter}{Tab}{Tab}POS{,} ORG{Enter}Date{:}{Tab}{Tab}%CurrentLongDate%{Enter}Subject{:}{Tab}SUB
+			Return
+		::.top::
+			Send, Adam Salter Gosnell{+}{Enter}
+			Send, INSERTPOSITION{Enter}
+			Send, INSERTORGANIZATION{Enter}
+			FormatTime, CurrentLongDate,,MMMM d{,} yyyy
+			Send, %CurrentLongDate%{Enter}{Enter}
+			Return
+		::.n::
+			Send, NOTES{Enter}{Enter}{Enter}
+			Send, ACCOUNT{Enter}{Enter}{Enter}
+			Send, SUMMARY{Enter}{Enter}{Enter}
+			Send, ASSESSMENT{Enter}{Enter}{Enter}
+			Send, PLAN{Enter}{Enter}{Enter}
+			Return
+		::.pos::
+			Send, [my current job title]
+		::.examen::
+			Send, GRATITUDE{Enter}{Enter}{Enter}
+			Send, ASK FOR GRACE{Enter}{Enter}{Enter}
+			Send, "DEMAND FROM YOUR SOUL AN ACCOUNT": THOUGHTS, WORDS, ACTIONS{Enter}{Enter}{Enter}
+			Send, During this time I thought:{Enter}During this time I said:{Enter}During this time I acted:{Enter}Consolation (under the influence of the good spirit, moving towards God) or Desolation?{Enter}
+			Send, ASK FOR FORGIVENESS{Enter}{Enter}{Enter}
+			Send, RESOLVE AMENDMENT, WITH GOD'S HELP{Enter}{Enter}{Enter}
+			Send, Close with the Our Father.
+			Return
+		::.j:: ; journal 
+			Send, Adam Salter Gosnell{+}{Enter}
+			Send, Personal Journal{Enter}
+			Send, [LOCATION]{Enter}
+			FormatTime, CurrentTime,, h:mm tt
+			FormatTime, DayLongDate,,dddd{,} MMMM d{,} yyyy
+			Send, %DayLongDate% @ %CurrentTime%{Enter Enter}
+			Return
+		::.x::✓
+		::.checkin::Physically, Emotionally, Spiritually, Low Points, High Points
+		::.checkinn::Physically, Emotionally, Professionally, Financially, Spiritually, Family
 
-;----Clients----                                        ; abbreviations for my clients, redacted
+	;----Clients----
 
-;----Ministry Partner Development----                   ; hotstrings I use for Ministry Partner Development, redacted
+	;----Ministry Partner Development----
+		::.meet::[N1], meet [N2]{Enter}[Where I met N2][N2 credentials][hook for reason to connect]{Enter}{Enter}[N2], meet [N1]{Enter}[Where I met N1][N1 credentials][hook for reason to connect]{Enter}{Enter}[suggestions about how to connect]
+		::.back::Thanks for getting back to me{!} I really appreciate it. 
+		::.oc::Of course. I understand entirely. 
+		::.up::I'll add you to the update list{!}
+		::.long::It's been a long time{!} I hope you're well. 
+		::.fro::
+			SendInput, First reach out
+			Sleep, 200
+			SendInput, {Tab}In 2 Days, 1 of 2
+			Sleep 200
+			SendInput, {Enter}
+			Return
+		::.clck::
+			SendInput, Click for More
+			SendInput, !{Enter}
+			Return
 
-;----Common Mistakes----                                ; at least now we know I'm not redacting out of pride... 
-::counselling::counseling
+	;----Common Mistakes----
 
-;----Dates or Times----
-::.t::
-    SendInput %CurrentTime%{Space} 
-    return
-::.d::
-    SendInput %CurrentShortDate%{Space} 
-    return
-::.dd::
-    SendInput, %CurrentLongDate%{Space}
-    return
+	;----Dates or Times----
+		::.t::
+   		    FormatTime, CurrentTime,, h:mm tt
+		    SendInput %CurrentTime%{Space} 
+		    Return
+		::.d::
+		    FormatTime, CurrentShortDate,, MM/dd/yyyy
+		    SendInput %CurrentShortDate%{Space} 
+		    Return
+		::.dy::
+		    FormatTime, CurrentFileDate,, yyyyMMdd
+		    SendInput %CurrentFileDate%{Space} 
+		    Return
+		::.dh::
+		    FormatTime, CurrentHyphenDate,, MM-dd-yyyy
+		    SendInput %CurrentHyphenDate%{Space} 
+		    Return
+		::.dd::
+		    FormatTime, CurrentLongDate,,MMMM d{,} yyyy
+		    SendInput, %CurrentLongDate%{Space}
+		    Return
 
 ;---------------
 ;               
@@ -76,335 +182,257 @@ return
 ;               
 ;---------------
 
-;----Autoformat Times on Numpad----
-$NumLock::                                              ; Because Numlock is always on (see above), I use the numlock key as a hotkey, single-press is "AM" formatting, double press is "PM"
-	KeyWait, NumLock, T0.1
-	if (ErrorLevel)
-	{
-		MsgBox Long press of NumLock
-		Return
-	} else {
-		KeyWait, NumLock, D T0.1
-		if (ErrorLevel)
-		{
-			SendInput, {Left}
-			SendInput, {Right}
-			SendInput, {Enter}
-			SendInput, {Left}{Left}
-			SendInput, :
-			SendInput, {Down}{Right}
-			SendInput, {Space} AM
-			SendInput, {Tab}
+	;----Autoformat Times on Daily Log----
+		$NumLock::
+			KeyWait, NumLock, T0.1
+			
+			If (ErrorLevel)
+			{
+				MsgBox Long press of NumLock
+				Return
+			} Else {
+				KeyWait, NumLock, D T0.1
+				If (ErrorLevel)
+				{
+					SendInput, {Left}
+					SendInput, {Right}
+					SendInput, {Enter}
+					SendInput, {Left}{Left}
+					SendInput, :
+					SendInput, {Down}{Right}
+					SendInput, {Space} AM
+					SendInput, {Tab}
+					Return
+				} Else {
+					SendInput, {Left}
+					SendInput, {Right}
+					SendInput, {Enter}
+					SendInput, {Left}{Left}
+					SendInput, :
+					SendInput, {Down}{Right}
+					SendInput, {Space} PM
+					SendInput, {Tab}
+					Return
+				}
+			}
+			KeyWait, NumLock
+		    Return
+		$NumpadDot::
+			KeyWait, NumpadDot, T0.075
+			
+			If (ErrorLevel)
+			{
+				SendInput, .
+				Return
+			} Else {
+				KeyWait, NumpadDot, D T0.075
+				If (ErrorLevel)
+				{
+					SendInput, .
+					Return
+				} Else {
+					SendInput, :
+					Return
+				}
+			}
+			KeyWait, NumpadDot
+		    Return
+		SC121::
+			;3rd numpad Calc
+			WinActivate,, obs64
+			SendInput, ^!+{F11}
 			Return
-		} else {
-			SendInput, {Left}
-			SendInput, {Right}
-			SendInput, {Enter}
-			SendInput, {Left}{Left}
-			SendInput, :
-			SendInput, {Down}{Right}
-			SendInput, {Space} PM
-			SendInput, {Tab}
+
+	;----2nd-Numpad----
+		#If (getKeyState("F22", "P"))                           ; If this keystroke was intercepted from the 2nd-keyboard (and now F12 is pressed).
+		F22::Return
+		Numpad0::                                               ; Standard input, hotkey use of Numpad0 and Numpad00 dealt with above.
+		    Run [Read_Me URL]
+		    ToolTip, Read_Me                                    
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		NumpadDot::
+			Reload
+		    Return
+		NumpadEnter::
+		    Send, {Enter}
+		    Return
+		Numpad1::
+		    Run chrome.exe "[Daily Log URL]" ; " --new-window" ; Run Chrome in a new window, direct to the Log
+			ToolTip, log ; tooltip
+			SetTimer, RemoveToolTip, 1000 ; set timer for tooltip removal subroutine
 			Return
-		}
-	}
-	KeyWait, NumLock
-	return
-SC121::                                                 ; This is a key that comes automatically on my 3rd numberpad, I moved it here b/c (a) I don't know how to wrap it with intercept, and (b) because there's no danger in mispressing it without intercept. 
-	Msgbox 3rd numpadCalc
-	return
+		Numpad2::
+		    Run https://mail.google.com/
+		    ToolTip, gmail 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad3::
+		    Run, https://drive.google.com
+		    ToolTip, drive 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad4::
+		    Run, [URL to Financials Spreadsheet]
+		    ToolTip, FY20XX
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad5::
+			Run, "D:\Wyze"
+			WinWait, BlueStacks
+			WinMove, -1080, -350
+			Return
+		Numpad6::
+		    Run, https://youtube.com
+		    ToolTip, youtube 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad7::
+		    Run, C:\Program Files\obs-studio\bin\64bit\obs64.exe
+		    Run, C:\Users\Adam Salter Gosnell\AppData\Roaming\Zoom\bin\Zoom.exe
+		    ToolTip, zoom 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad8::
+		    Run, C:\Windows\System32\calc.exe
+		    ToolTip, calculator 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		Numpad9::
+		    FormatTime, CurrentShortDate,, MM/dd/yyyy
+			Run, "C:\Program Files\Sublime Text 3\sublime_text.exe" -n "D:\! - Notes\notebook.sublime-project"
+			Run, D:\! - Notes\public\.Working_Notes.md
+			WinWait, D:\! - Notes\public\.Working_Notes.md (notebook) - Sublime Text (UNREGISTERED)
+			WinMove, D:\! - Notes\public\.Working_Notes.md (notebook) - Sublime Text (UNREGISTERED), , -1056, 598, 1033, 776
+			; GoSub, AutoSave
+		    Return
+		NumpadSub::
+		    SendInput, {Volume_Down 5}
+		    Return
+		NumpadAdd::
+		    SendInput, {Volume_Up 5}
+		    Return
+		NumLock::
+		    SoundSet, +1, MASTER, mute, 11
+		    SoundGet, master_mute, , mute, 11
+		    ToolTip, Microphone Mute %master_mute% 
+		    SetTimer, RemoveToolTip, 1000
+		    Return
+		NumpadDiv::
+		    toggleOutput:=!toggleOutput
+		    If toggleOutput
+			{
+				Run nircmd setdefaultsounddevice "Speakers"
+				Run nircmd setdefaultsounddevice "Speakers" 2
+				Output = s ; this is helpful for the mute, later
+			    ToolTip, Output: Speakers
+		        SetTimer, RemoveToolTip, 1000
+		    } Else {
+		        Run nircmd setdefaultsounddevice "Headphones"
+   				Run nircmd setdefaultsounddevice "Headphones" 2
+				Output = h ; this is helpful for the mute, later
+			    ToolTip, Output: Headphones
+		        SetTimer, RemoveToolTip, 1000
+		    }
+		    Return
+		NumpadMult::
+		SC00E::                                                 ; NumpadBackspace.
+		    Send, {Volume_Mute}
+		    Return
+		#if  
 
-;----Handling 2nd-Numpad's 00----                       ; My second numberpad has a 00 key that actually just presses 0 twice really fast, so I couldn't incorporate it into intercept. You'll see, I actually intercept my regular 0 key (below)
-#MaxThreadsPerHotkey 5                                  ; $Numpad0's routine can run overlappingly.
-$Numpad0::                                              ; The $-prefix forces use of the "keyboard hook", slower but more malliable method for hotkeyying.
-    #MaxThreadsPerHotkey 1                              ; Placing this in the routine means that the hotkey cannot call itself. 
-    SetBatchLines, 100                                  ; Make the routine run a little faster in this case.
-    DelayBetweenKeys = 30                               
-    If A_PriorHotkey = %A_ThisHotkey% 
-	{                                                   ; If 0 is entered TWICE...
-        If A_TimeSincePriorHotkey < %DelayBetweenKeys% 
-		{                                               ; ... within the delay, run Super Mario (my son loves it)
-            SplashImage F:\NES Nintendo\NintendoLogo_small.png, B
-			Sleep 1000
-			SplashImage Off
-			Run, F:\NES Nintendo\Mesen.exe
-			WinWait, Mesen, , 3
-			WinActivate, Mesen
-			Sleep, 500                                  ; This seems to be an error point, we can adjust this later if things don't work.
-			Send ^o
-			SendInput, Super Mario Bros (1985).nes{Enter}
-			CalledReentrantly = y                  
-            return
-        }                                               ; this closes the "A_TimeSincePriorHotkey < %DelayBetweenKeys%..." section.
-    }                                                   ; this closes the "if A_PriorHotkey = %A_ThisHotkey%..." section.
-    CalledReentrantly = n                               ; If 0 is entered ONCE...
-    Sleep, %DelayBetweenKeys%                           ; Sleep for the delay. (During this sleep, the Numpad 0 may be pressed again, in a different "thread.")
-    If CalledReentrantly = y 
-	{                                                   ; If, during the sleep, another thread changed this variable, it's the first part of a double-press, not a single-press.
-        CalledReentrantly = n                           ; ... so hide the first press from the system.
-        return                                          
-    }
-    Run [...]                                           ; If 0 is entered ONCE, open [redacted, Google Doc]
-    ToolTip, Read_Me                                    
-    SetTimer, RemoveToolTip, 1000
-    return                                              
+	;----3rd-Numpad----
+		#if (getKeyState("F23", "P"))
+		F23::Return
+		Numpad0::
+			Msgbox 3rd numpad0
+			Return
+		NumpadDot::
+			Run, C:\Program Files\AutoHotkey\WindowSpy.ahk
+		    ToolTip, WindowSpy
+		    SetTimer, RemoveToolTip, 1000
+			Return
+		NumpadEnter::
+			SendInput {Enter}
+			Return
+		Numpad1::
+		Numpad2::
+			Run, https://calendar.google.com/calendar/r
+			ToolTip, Calendar
+		    SetTimer, RemoveToolTip, 1000
+			Return
+		Numpad3::
+		Numpad4::
+			Run, https://open.spotify.com/
+			ToolTip, music
+		    SetTimer, RemoveToolTip, 1000
+			Return
+		Numpad5::
+		Numpad6::
+		Numpad7::
+			Run, https://app.youneedabudget.com
+			Return
+		Numpad8::
+			SendInput, ^+a
+			Return
+		Numpad9::
+			Msgbox 3rd numpad9
+			Return
+		NumpadSub::
+			Msgbox 3rd numpad-
+			Return
+		NumpadAdd::
+			Msgbox 3rd numpad+
+			Return
+			; NumLock:: ; can we use this one on the third keyboard?
+			;	Msgbox 3rd numLock
+			;	return
+		NumpadDiv::
+			Msgbox 3rd numpad/
+			Return
+		NumpadMult::
+			Msgbox 3rd numpad*
+			Return
+		SC00E::
+			; 3rd numpadBackspace
+			Msgbox, 3rd numpadBackspace
+			Return
+		Esc::
+			SplashImage, D:\Hotkeys_and_Keyboards\AutoHotkeyNumpadShortcuts.png, B
+			Sleep, 2000
+			SplashImage, Off
+			Return
+		; 3rdnumpad Calc is above
+		Tab::
+			WinActivate,, obs64
+			SendInput, ^!+{F12}
+			Return
+		=::
+			toggleRiftS:=!toggleRiftS
+		    If toggleRiftS
+			{
+				Run nircmd setdefaultsounddevice "Rift S Speakers"
+				Run nircmd setdefaultsounddevice "Rift S Speakers" 2
+		        Run nircmd setdefaultsounddevice "Rift S Microphone"		    	
+		        Run nircmd setdefaultsounddevice "Rift S Microphone" 2
+				Output = rifts ; this is helpful for the mute, later
+			    ToolTip, Input and Output: Rift S
+		        SetTimer, RemoveToolTip, 1000
+		    } Else {
+		        Run nircmd setdefaultsounddevice "Microphone"		    	
+		        Run nircmd setdefaultsounddevice "Microphone" 2
+		        Run nircmd setdefaultsounddevice "Headphones"
+				Run nircmd setdefaultsounddevice "Headphones" 2
+				Output = h ; this is helpful for the mute, later
+			    ToolTip, Input: Boom / Output: Headphones
+		        SetTimer, RemoveToolTip, 1000
+		    }
+		    Return
+			Return
+		#if
 
-;----2nd-Numpad----                                     ; Almost all of these keys are intercepted with intercept (*wink*), keymap.ini wraps them in F22
-#if (getKeyState("F22", "P"))                           ; If this keystroke was intercepted from the 2nd-keyboard (and now F22 is pressed).
-F22::return
-Numpad0::                                               ; Standard input, hotkey use of Numpad0 and Numpad00 dealt with above.
-    SendInput, 0
-	return
-NumpadDot::                                             ; Unhides the intercept window (so I can see when things are getting pressed), and opens the AHK script to edit
-	toggleEdit:=!toggleEdit                             ; this works on a basic toggle, press once to edit, press again to hide things and reload AHK script
-    if toggleEdit 
-	{
-        WinShow, D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe    
-		Edit, D:\Hotkeys_and_Keyboards\Keyboard_Shortcuts.ahk
-    } else {
-		WinHide, D:\Hotkeys_and_Keyboards\intercept\intercept\intercept.exe
-		WinActivate D:\Hotkeys_and_Keyboards\Keyboard_Shortcuts.ahk - Notepad++
-		WinMenuSelectItem, A,,File, Save
-		WinMenuSelectItem, A,,File, Exit
-		Reload
-    }
-    return
-NumpadEnter::                                           ; When I loaded intercept, I thought I was going to use enter, come to find out, I like it being a regular enter, so it's basically a passthrough
-    Send, {Enter}
-	return
-Numpad1::
-	Run, [...]                                          ; [redacted, Google Doc for logging my time]
-	ToolTip, log 
-	SetTimer, RemoveToolTip, 1000
-	Return
-Numpad2::                                               ; opens my gmail
-    Run https://mail.google.com/
-    ToolTip, gmail 
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad3::                                               ; opens my Google Drive
-    Run, https://drive.google.com
-    ToolTip, drive 
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad4::
-    Run, [...]                                          ; Opens the spreadsheet I use for my budget and Ministry Partner Development
-    ToolTip, FY20XX
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad5::                                               ; Opens my baby monitor
-	Run, "C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
-    WinWait, VLC media player
-    WinActivate, VLC media player
-    WinWaitActive, VLC media player
-    Send, ^n
-    Send, {Enter}{Enter}
-    WinWait, [rtsp://...] - VLC media player,, 3
-	WinMove, [rtsp://...],,-1080, -420, 1075, 700
-	CoordMode, Pixel, Screen                            ; I can't explain why screen makes more sense to me, it just does
-	Loop                                                ; starts a loop, watches for a pixel color to turn 0x000000 before doing anything else
-	{
-		PixelGetColor, color, -1010, -281
-		Continue
-	} Until (color = 0x000000)
-	WinMove, rtsp://192.168.1.220/live/ch0 - VLC media player,,-1080, -420, 1075, 700 ; this is a little sloppy, but it wouldn't resize it until it was loaded
-	Return
-Numpad6::                                               ; I admit to laziness
-    Run, https://youtube.com
-    ToolTip, youtube 
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad7::                                               ; Runs Zoom, for video-meetings
-    Run, [...]
-    ToolTip, Zoom 
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad8::                                               ; runs the calculator
-    Run, C:\Windows\System32\calc.exe
-    ToolTip, calculator 
-    SetTimer, RemoveToolTip, 1000
-    return
-Numpad9::                                               ; I'm testing out Sublime Text 3 for notetaking and coding, you can use notepad or whatever instead too. 
-	Run, D:\! - Notes\public\Working_Notes.md
-	WinWait, D:\! - Notes\public\Working_Notes.md - Sublime Text (UNREGISTERED)
-	WinMove, D:\! - Notes\public\Working_Notes.md - Sublime Text (UNREGISTERED), , -1056, 598, 1033, 776
-;	GoSub, AutoSave                                     ; This is a dream I have. It's not done yet. We'll see.
-	return
-NumpadSub::                                             ; these are pretty self-explanatory
-    SendInput, {Volume_Down 10}
-    return
-NumpadAdd::
-    SendInput, {Volume_Up 10}
-    return
-NumLock::                                               ; Mutes the mic, see https://www.autohotkey.com/boards/viewtopic.php?t=15509
-    SoundSet, +1, MASTER, mute, 11
-    SoundGet, master_mute, , mute, 11
-    ToolTip, Microphone %master_mute% 
-    SetTimer, RemoveToolTip, 1000
-    return
-NumpadDiv::                                             ; this toggles between speakers and headphones using the nircmd program, https://www.nirsoft.net/utils/nircmd.html
-    toggleOutput:=!toggleOutput
-    If toggleOutput
-	{
-		Run nircmd setdefaultsounddevice "Speakers"
-		Output = s ; this is helpful for the mute, later
-	    ToolTip, Output: Speakers
-        SetTimer, RemoveToolTip, 1000
-    } else {
-        Run nircmd setdefaultsounddevice "Headphones"
-		Output = h ; this is helpful for the mute, later
-	    ToolTip, Output: Headphones
-        SetTimer, RemoveToolTip, 1000
-    }
-    return
-NumpadMult::                                            ; this opens a gmail for my wife in an incognito window (so gmail will still take me straight to MINE!!)
-    Run chrome.exe "https://mail.google.com/" " --incognito "
-    WinWait Gmail - Google Chrome
-    Sleep, 750
-    WinActivate
-    Send, [...]
-    Sleep, 750 
-    Send, [...]
-    Send, {Enter} 
-    return
-SC00E::                                                 ; NumpadBackspace.
-    Send, {Volume_Mute}
-    return
-#if  
-
-;----3rd-Numpad----
-#if (getKeyState("F23", "P"))                           ; this basically works the same way as the 2nd numberpad, but with F23 wrap instead of F22
-F23::return
-Numpad0::                                               ; I won't comment on all of these, but this is my placeholder until I find a function I want for the hotkey
-	Msgbox 3rd numpad0
-	return
-NumpadDot::                                             ; part of the AHK kit, but MAD useful
-	Run, C:\Program Files\AutoHotkey\WindowSpy.ahk
-    ToolTip, WindowSpy
-    SetTimer, RemoveToolTip, 1000
-	return
-NumpadEnter::                                           ; I'm a man of consistency. 
-	SendInput {Enter}
-	Return
-Numpad1::                                               ; This clocks me out on my Google Doc Log
-    Run chrome.exe "https://[...]" " --new-window"      ; Run Chrome in a new winder, direct to the Log
-	ToolTip, clockout                                   ; tooltip
-	SetTimer, RemoveToolTip, 1000                       ; set timer for tooltip removal subroutine
-	WinRestore, .Log (asg+) - Google Sheets - Google Chrome ; un-maximize if (if needed)
-	WinWait, .Log (asg+) - Google Sheets - Google Chrome ; Wait until it's loaded
-	WinMove, .Log (asg+) - Google Sheets - Google Chrome,,-1080, -413, 1081, 946 ; Move it to the left screen, top half
-	CoordMode, Pixel, Screen                            ; set the coordinate mode for pixels to by "screen" location
-	Loop                                                ; start the loop
-	{
-		If (target_color=0xA4A19E)                      ; if the target pixel IS target_color (i.e. the Google Doc is loaded, based on the little folder icon)...
-		{
-			Break                                       ; and break the loop
-		} Else {                                        ; if the target pixel IS NOT target_color
-			PixelGetColor, target_color, -851, -277     ; get the target-pixel color again
-			Continue                                    ; and run the loop again
-		}
-	}
-	Sleep, 500                                          ; buffer
-	SendInput, ^{Down}                                  ; go to the bottom of the frozen rows
-	SendInput, ^{Down}                                  ; Got to the last row with an input
-	SendInput, {Down}                                   ; start a new row
-	SendInput, %CurrentShortDate%{Tab}{Tab}             ; put in the date (tab through the auto-generating day-of-the-week column)
-	SendInput, 5:00 PM{Tab}                             ; enter time
-	SendInput, -{Tab}                                   ; enter client name (n/a)
-	SendInput, clockout{Enter}                          ; enter activity description
-	Return
-Numpad2::
-	Msgbox 3rd numpad3
-	return
-Numpad3::
-	Msgbox 3rd numpad3
-	return
-Numpad4::
-	Msgbox 3rd numpad4
-	return
-Numpad5::
-	Msgbox 3rd numpad5
-	return
-Numpad6::
-	Msgbox 3rd numpad6
-	return
-Numpad7::
-	Msgbox 3rd numpad7
-	return
-Numpad8::
-	Msgbox 3rd numpad8
-	return
-Numpad9::
-	Msgbox 3rd numpad9
-	return
-NumpadSub::
-	Msgbox 3rd numpad-
-	return
-NumpadAdd::
-	Msgbox 3rd numpad+
-	return
-; NumLock::                                             ; this is a dead button, Numpad 3 uses numlock mechanically, so "Numlock always on" doesn't work with it
-NumpadDiv::
-	Msgbox 3rd numpad/
-	return
-NumpadMult::
-	Msgbox 3rd numpad*
-	return
-Esc::                                                   ; I use this until I have a whole page, then I print them, cut them out, and tape them to my keys like the OCD organizer I am
-	SplashImage, D:\Hotkeys_and_Keyboards\AutoHotkeyNumpadShortcuts.png, B
-	Sleep, 2000
-	SplashImage, Off
-	return
-	return
-Tab::
-	Msgbox 3rd numpadTab
-	return
-SC00E::
-	Msgbox 3rd numpadBackspace
-	return
-=::
-	Msgbox 3rd numpadEqual
-	return
-#if
-
-;----Subroutines----
-AutoSave:                                               ; I haven't quite figured this out yet, so it's just chillin'
-    ToolTip, Entered AutoSave Subroutine
-    SetTimer, RemoveToolTip, 1000 
-	If WinExist("ahk_class Notepad") 
-	{
-;		SetTimer, AutoSave, 5000 ; move to 60000 once I know it works
-		return
-	} else {
-		SetTimer, AutoSave, Off
-		return
-	}
-RemoveToolTip:                                          ; This is a subroutine called in basically every hotkey that removes the tooltip 
-    SetTimer, RemoveToolTip, Off
-    ToolTip
-    return
-
-;------------------------------
-;                              
-;    Long-Press ESC to Exit    
-;                              
-;------------------------------
-
-;$Escape::                                              ; This is just a cool code I found, I used it some for some of my other keys
-;    KeyWait, Escape, T0.5                              ; Wait for the Esc key to be released for 0.5 seconds (suppressing auto-repeat).
-;    If ErrorLevel 
-;	{                                                   ; If the key is still down.
-;        WinGet, X, ProcessName, A                      ; Get the active process's name.
-;        SplashTextOn,,150,,`nRelease button to close %x%`n`nKeep pressing it to NOT close window...
-;        KeyWait, Escape, T3                             ; Wait for the Esc Key to be released for 3 seconds.
-;        SplashTextOff
-;        If !ErrorLevel 
-;		{                                                ; No timeout, so key was released...
-;            PostMessage, 0x112, 0xF060,,, A             ; ... so close window.
-;            return
-;        }                                               ; Otherwise,
-;        KeyWait, Escape                                 ; Wait for button to be released...
-;        return                                          ; ... then do nothing, send
-;    }
-;    Send {Esc}                                          ; ... a regular escape.
-;    return                                              ;
+	;----Subroutines----
+		RemoveToolTip:
+		    SetTimer, RemoveToolTip, Off
+		    ToolTip
+		    Return
